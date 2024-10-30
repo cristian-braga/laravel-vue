@@ -36,11 +36,11 @@
                 <div class="form-group">
                   <label for="dateFormat">Formato de datas</label>
                   <select class="form-control" v-model="settings.date_format">
-                    <option value="DD/MM/YYYY">DD/MM/AAAA</option>
-                    <option value="MM/DD/YYYY">MM/DD/AAAA</option>
-                    <option value="YYYY-MM-DD">AAAA-MM-DD</option>
-                    <option value="Month DD, YYYY">mês DD, AAAA</option>
-                    <option value="DD Month YYYY">DD mês AAAA</option>
+                    <option value="d/m/Y">DD/MM/AAAA</option>
+                    <option value="m/d/Y">MM/DD/AAAA</option>
+                    <option value="Y-m-d">AAAA-MM-DD</option>
+                    <option value="F j, Y">mês DD, AAAA</option>
+                    <option value="j F Y">DD mês AAAA</option>
                   </select>
                   <span v-if="errors && errors.date_format" class="text-danger text-sm">{{ errors.date_format[0] }}</span>
                 </div>

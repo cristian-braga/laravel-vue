@@ -19,6 +19,15 @@ class UserController extends Controller
         //     ];
         // });
 
+        // $users = User::latest()->get()->map(function ($user) {
+        //     return [
+        //         'id' => $user->id,
+        //         'name' => $user->name,
+        //         'email' => $user->email,
+        //         'created_at' => $user->created_at->format(config('app.date_format'))
+        //     ];
+        // });
+
         $search = $request->query('query');
 
         $users = User::query()
@@ -26,7 +35,7 @@ class UserController extends Controller
                 $query->where('name', 'like', "%{$search}%");
             })    
             ->latest()
-            ->paginate();
+            ->paginate(setting('pagination_limit'));
 
         return $users;
     }
@@ -39,13 +48,15 @@ class UserController extends Controller
             'password' => 'required|min:8'
         ], [
             'name.required' => 'O campo nome é obrigatório.',
+            'email.required' => 'O campo email é obrigatório.',
             'email.unique' => 'Esse e-mail já está em uso. Por favor, escolha outro.',
-            'password' => 'A senha deve ter pelo menos :min caracteres.'
+            'password.min' => 'A senha deve ter pelo menos :min caracteres.'
         ]);
 
         $data = $request->all();
 
         $data['password'] = bcrypt($request['password']);
+        $data['avatar'] = 'noimage.jpg';
 
         $user = User::create($data);
 
@@ -60,6 +71,7 @@ class UserController extends Controller
             'password' => 'sometimes|min:8'
         ], [
             'name.required' => 'O campo nome é obrigatório.',
+            'email.required' => 'O campo email é obrigatório.',
             'email.unique' => 'Esse e-mail já está em uso. Por favor, escolha outro.',
             'password' => 'A senha deve ter pelo menos :min caracteres.'
         ]);

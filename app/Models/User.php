@@ -5,10 +5,12 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\RoleType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -23,7 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'avatar'
     ];
 
     /**
@@ -34,6 +37,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $appends = [
+        'formatted_created_at'
     ];
 
     /**
@@ -49,10 +56,24 @@ class User extends Authenticatable
         ];
     }
 
-    public function role() : Attribute
+    public function getFormattedCreatedAtAttribute()
+    {
+        // return $this->created_at->format(setting('date_format'));
+
+        return Carbon::parse($this->created_at)->translatedFormat(setting('date_format'));
+    }
+
+    public function role(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => RoleType::from($value)->name
+            get: fn($value) => RoleType::from($value)->name
+        );
+    }
+
+    public function avatar(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => asset(Storage::url($value) ?? asset('noimage.jpg'))
         );
     }
 }

@@ -6,7 +6,8 @@
     <td>{{ index + 1 }}</td>
     <td>{{ user.name }}</td>
     <td>{{ user.email }}</td>
-    <td>{{ formatDate(user.created_at) }}</td>
+    <!-- <td>{{ formatDate(user.created_at) }}</td> -->
+    <td>{{ user.formatted_created_at }}</td>
     <td>
       <select class="form-control" @change="changeRole(user, $event.target.value)">
         <option v-for="role in roles" :key="role.value" :value="role.value" :selected="(user.role === role.name)">

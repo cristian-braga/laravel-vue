@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardStatsController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,12 @@ Route::middleware('auth')->group(function () {
     Route::controller(SettingController::class)->group(function () {
         Route::get('/api/settings', 'index')->name('settings.index');
         Route::post('/api/settings', 'update')->name('settings.update');
+    });
+
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/api/profile', 'index')->name('profile.index');
+        Route::put('/api/profile', 'update')->name('profile.update');
+        Route::post('/api/upload-profile-image', 'uploadImage')->name('profile.uploadImage');
     });
 });
 
