@@ -144,6 +144,8 @@
       </div>
     </div>
   </div>
+
+  <Preloader :loading="loading" />
 </template>
 
 <script setup>
@@ -155,6 +157,7 @@ import { useToastr } from "../../toastr.js";
 import { debounce } from "lodash";
 import UserItem from "./UserItem.vue";
 import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+import Preloader from "../../components/Preloader.vue";
 
 const users = ref({ data: [] });
 const editing = ref(false);
@@ -165,8 +168,11 @@ const searchQuery = ref(null);
 const selectedUsers = ref([]);
 const selectAll = ref(false);
 const userId = ref(null);
+const loading = ref(false);
 
 const getUsers = (page = 1) => {
+  loading.value = true;
+
   axios.get(`/api/users?page=${page}`, {
     params: {
       query: searchQuery.value
@@ -178,6 +184,8 @@ const getUsers = (page = 1) => {
       selectedUsers.value = [];
 
       selectAll.value = false;
+
+      loading.value = false;
     });
 };
 

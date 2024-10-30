@@ -81,18 +81,24 @@
       </div>
     </div>
   </div>
+
+  <Preloader :loading="loading" />
 </template>
 
 <script setup>
 import axios from "axios";
 import { computed, onMounted, ref } from "vue";
 import Swal from "sweetalert2";
+import Preloader from "../../components/Preloader.vue";
 
 const appointments = ref([]);
 const appointmentStatus = ref([]);
 const selectedStatus = ref();
+const loading = ref(false);
 
 const getAppointments = (status) => {
+  loading.value = true;
+
   selectedStatus.value = status;
 
   const params = {};
@@ -106,6 +112,8 @@ const getAppointments = (status) => {
   })
     .then((response) => {
       appointments.value = response.data;
+
+      loading.value = false;
     });
 };
 
