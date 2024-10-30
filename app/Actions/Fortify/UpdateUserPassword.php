@@ -22,7 +22,11 @@ class UpdateUserPassword implements UpdatesUserPasswords
             'current_password' => ['required', 'string', 'current_password:web'],
             'password' => $this->passwordRules(),
         ], [
-            'current_password.current_password' => __('The provided password does not match your current password.'),
+            'current_password.required' => __('O campo senha atual é obrigatório.'),
+            'current_password.current_password' => __('A senha fornecida não corresponde à sua senha atual.'),
+            'password.required' => __('O campo nova senha é obrigatório.'),
+            'password.confirmed' => __('A confirmação de senha não corresponde.'),
+            'password.min' => __('A senha deve ter pelo menos :min caracteres.')
         ])->validateWithBag('updatePassword');
 
         $user->forceFill([

@@ -80,23 +80,25 @@
                 </div>
 
                 <div class="tab-pane" id="changePassword">
-                  <form class="form-horizontal">
+                  <form @submit.prevent="handleChangePassword" class="form-horizontal">
                     <div class="form-group row">
                       <label for="currentPassword" class="col-sm-3 col-form-label">Senha atual</label >
                       <div class="col-sm-9">
-                        <input type="password" class="form-control" id="currentPassword" placeholder="Senha atual" />
+                        <input type="password" class="form-control" id="currentPassword" placeholder="Senha atual" v-model="changePasswordForm.currentPassword" />
+                        <span v-if="errors && errors.current_password" class="text-danger text-sm">{{ errors.current_password[0] }}</span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="newPassword" class="col-sm-3 col-form-label">Nova senha</label>
                       <div class="col-sm-9">
-                        <input type="password" class="form-control" id="newPassword" placeholder="Nova senha" />
+                        <input type="password" class="form-control" id="newPassword" placeholder="Nova senha" v-model="changePasswordForm.password" />
+                        <span v-if="errors && errors.password" class="text-danger text-sm">{{ errors.password[0] }}</span>
                       </div>
                     </div>
                     <div class="form-group row">
                       <label for="passwordConfirmation" class="col-sm-3 col-form-label" >Confirmar senha</label>
                       <div class="col-sm-9">
-                        <input type="password" class="form-control" id="passwordConfirmation" placeholder="Confirmar senha" />
+                        <input type="password" class="form-control" id="passwordConfirmation" placeholder="Confirmar senha" v-model="changePasswordForm.passwordConfirmation" />
                       </div>
                     </div>
                     <div class="form-group row">
@@ -119,7 +121,7 @@
 
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { useToastr } from "../../toastr.js";
 
 const toastr = useToastr();
@@ -133,6 +135,12 @@ const form = ref({
   role: ''
 });
 
+const changePasswordForm = reactive({
+  currentPassword: '',
+  password: '',
+  passwordConfirmation: ''
+});
+
 const getUser = () => {
   axios.get('/api/profile')
     .then((response) => {
@@ -144,6 +152,24 @@ const updateProfile = () => {
   axios.put('/api/profile', form.value)
     .then((response) => {
       toastr.success("Perfil alterado com sucesso!");
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 422) {
+        errors.value = error.response.data.errors;
+      }
+    });
+};
+
+const handleChangePassword = () => {
+  errors.value = '';
+
+  axios.post('/api/change-password', changePasswordForm)
+    .then((response) => {
+      toastr.success(response.data.message);
+
+      for (let field in changePasswordForm) {
+        changePasswordForm[field] = '';
+      }
     })
     .catch((error) => {
       if (error.response && error.response.status === 422) {

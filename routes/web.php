@@ -10,7 +10,7 @@ use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Route::get('/admin/dashboard', function () {
@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/api/profile', 'index')->name('profile.index');
         Route::put('/api/profile', 'update')->name('profile.update');
         Route::post('/api/upload-profile-image', 'uploadImage')->name('profile.uploadImage');
+        Route::post('/api/change-password', 'changePassword')->name('profile.changePassword');
     });
 });
 
