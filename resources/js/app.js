@@ -4,19 +4,30 @@ import 'admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js';
 import 'admin-lte/dist/js/adminlte.min.js';
 
 import { createApp } from 'vue/dist/vue.esm-bundler.js';
+import { createPinia } from 'pinia';
 import { createRouter, createWebHistory } from 'vue-router';
 import routes from './routes.js';
 import Login from './pages/auth/Login.vue';
+import App from './App.vue';
 
-const app = createApp({});
+const pinia = createPinia();
+
+const app = createApp(App);
 
 const router = createRouter({
     routes: routes,
     history: createWebHistory()
 });
 
+app.use(pinia);
 app.use(router);
 
-app.component('Login', Login);
+if (window.location.pathname === '/login') {
+    const currentApp = createApp();
 
-app.mount('#app');
+    currentApp.component('Login', Login);
+
+    currentApp.mount('#login');
+} else {
+    app.mount('#app');
+}
