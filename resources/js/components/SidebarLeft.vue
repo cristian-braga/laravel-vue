@@ -2,7 +2,7 @@
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <a href="index3.html" class="brand-link">
       <img src="https://adminlte.io/themes/v3/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: 0.8" />
-      <span class="brand-text font-weight-light">{{ settings?.app_name }}</span> 
+      <span class="brand-text font-weight-light">{{ settingStore.setting.app_name }}</span>
     </a>
 
     <div class="sidebar">
@@ -67,19 +67,20 @@
 </template>
 
 <script setup>
+import { useRouter } from "vue-router";
 import { useAuthUserStore } from "../stores/AuthUserStore";
+import { useSettingStore } from "../stores/SettingStore";
 
-defineProps({
-  user: Object,
-  settings: Object
-});
-
+const router = useRouter();
 const authUserStore = useAuthUserStore();
+const settingStore = useSettingStore();
 
 const logout = () => {
   axios.post('/logout')
     .then((response) => {
-      window.location.href = '/login';
+      authUserStore.user.name = '';
+
+      router.push('/login');
     });
 };
 </script>

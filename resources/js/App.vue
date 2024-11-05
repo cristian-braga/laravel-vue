@@ -1,8 +1,8 @@
 <template>
-  <div class="wrapper" id="app">
+  <div v-if="authUserStore.user.name !== ''" :class="`wrapper ${currentThemeMode}`" id="app">
     <AppNavbar />
 
-    <SidebarLeft :user="user" :settings="settings" />
+    <SidebarLeft />
 
     <div class="content-wrapper">
       <RouterView></RouterView>
@@ -10,41 +10,26 @@
 
     <SidebarRight />
 
-    <AppFooter :settings="settings" />
+    <AppFooter />
+  </div>
+  <div v-else :class="`login-page ${currentThemeMode}`">
+    <RouterView></RouterView>
   </div>
 </template>
 
 <script setup>
-import axios from "axios";
-import { onMounted, ref } from "vue";
 import AppNavbar from "./components/AppNavbar.vue";
 import SidebarLeft from "./components/SidebarLeft.vue";
 import SidebarRight from "./components/SidebarRight.vue";
 import AppFooter from "./components/AppFooter.vue";
 import { useAuthUserStore } from "./stores/AuthUserStore";
+import { useSettingStore } from "./stores/SettingStore";
+import { computed } from "vue";
 
 const authUserStore = useAuthUserStore();
-authUserStore.getAuthUser();
+const settingStore = useSettingStore();
 
-const settings = ref(null);
-const user = ref(null);
-
-const fetchSettings = () => {
-  axios.get('/api/settings')
-    .then((response) => {
-      settings.value = response.data;
-    });
-};
-
-const fetchAuthUser = () => {
-  axios.get('/api/profile')
-    .then((response) => {
-      user.value = response.data;
-    });
-};
-
-onMounted(() => {
-  fetchSettings();
-  fetchAuthUser();
+const currentThemeMode = computed(() => {
+  return settingStore.theme === 'dark' ? 'dark-mode' : '';
 });
 </script>

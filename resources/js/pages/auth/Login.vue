@@ -51,12 +51,18 @@
       </div>
     </div>
   </div>
+  <div>
+    test@example.com <br>
+    password
+  </div>
 </template>
 
 <script setup>
 import axios from "axios";
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const errorMessage = ref("");
 const loading = ref(false);
 
@@ -72,7 +78,7 @@ const handleSubmit = () => {
 
   axios.post('/login', form)
     .then(() => {
-      window.location.href="/admin/dashboard";
+      router.push('/admin/dashboard');
     })
     .catch((error) => {
       errorMessage.value = error.response.data.message;
